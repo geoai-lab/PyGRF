@@ -43,16 +43,15 @@ Figure 3. Map visualizations for the case study of help request prediction in Bu
 
 
 
-### Creating and using a virtual environment  
+### Installation
 
-With pip:  
-- pip install -r requirements.txt
+We have published the code for PyGRF as a Python package in PyPI (https://pypi.org/project/PyGRF/). You can directly install it with the command "pip install PyGRF". 
 <br />
 
 
 ### Reference
 If you use the data or code from this repository, we will really appreciate if you can cite our book chapter:
 
-Kai Sun, Ryan Zhenqi Zhou, Jiyeon Kim, and Yingjie Hu. 2024. PyGRF: An improved Python Geographical Random Forest model and case studies in public health and natural disasters. 
+Kai Sun, Ryan Zhenqi Zhou, Jiyeon Kim, and Yingjie Hu. 2024. PyGRF: An improved Python Geographical Random Forest model and case studies in public health and natural disasters.
 
 
