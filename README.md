@@ -36,6 +36,7 @@ Figure 3. Map visualizations for the case study of help request prediction in Bu
 
 ### Repository organization
 
+* The file "PyGRF.py" is source code of this Python-based GRF model.
 * The folder "Notebooks" contains two Jupyter Notebooks used for implementing the two case studies in public health and natural disasters.
 * The folder "Data" contains the experimental data for the two case studies including obesity rate data and 311 help request data.
 <br />
@@ -52,7 +53,7 @@ We have published the code for PyGRF as a Python package in PyPI (https://pypi.o
 
 
 ### Reference
-If you use the data or code from this repository, or the PyGRF package, we will really appreciate if you can cite our book chapter:
+If you use the data or code from this repository, or the PyGRF package, we will really appreciate if you can cite our paper:
 
 Kai Sun, Ryan Zhenqi Zhou, Jiyeon Kim, and Yingjie Hu. 2024. PyGRF: An improved Python Geographical Random Forest model and case studies in public health and natural disasters.
 
