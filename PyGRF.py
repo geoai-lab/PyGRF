@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score
-from scipy.spatial import distance
 from sklearn.utils import resample
+from scipy.spatial import distance
 import libpysal
 from esda import Moran
 
@@ -17,9 +17,9 @@ class PyGRFBuilder:
     band_width: int or float
         - The number (int) of neighbors for fitting local models if kernel is "adaptive".
         - The number (int or float) of distance within which the neighbors are used for model fitting if kernel is "fixed".
-    ntree: int, default=100
+    n_estimators: int, default=100
         The number of trees in the forest.
-    mtry: {“sqrt”, “log2”, None}, int or float, default=1.0
+    max_features: {“sqrt”, “log2”, None}, int or float, default=1.0
         The number of input variables to consider at each split.
         More details please refer to the documentation of scikit-learn at the link: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html.
     kernel: {"adaptive", "fixed"}, default="adaptive"
@@ -44,10 +44,10 @@ class PyGRFBuilder:
         More details please refer to the documentation of scikit-learn at the link: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html.
     """
 
-    def __init__(self, band_width, ntree=100, mtry=1.0, kernel="adaptive", train_weighted=True, predict_weighted=True,
+    def __init__(self, band_width, n_estimators=100, max_features=1.0, kernel="adaptive", train_weighted=True, predict_weighted=True,
                  resampled=True, n_jobs=None, bootstrap=True, random_seed=None):
-        self.ntree = ntree
-        self.mtry = mtry
+        self.n_estimators = n_estimators
+        self.max_features = max_features
         self.band_width = band_width
         self.kernel = kernel
         self.train_weighted = train_weighted
@@ -73,7 +73,7 @@ class PyGRFBuilder:
         y_train: data series
             A data series of the dependent variable of training samples.
         coords: data frame
-            A data frame of the two-dimensional coordinates of training samples.
+            A data frame of the two-dimensional coordinates of training samples. It is recommended to use projected coordinates.
 
         Returns
         -------
@@ -88,12 +88,12 @@ class PyGRFBuilder:
 
         # fit and save the global model, and get the OOB predictions from the global model if bootstrap is True
         if self.bootstrap:
-            rf_global = RandomForestRegressor(bootstrap=self.bootstrap, oob_score=True, n_estimators=self.ntree,
-                                              max_features=self.mtry, n_jobs=self.n_jobs,
+            rf_global = RandomForestRegressor(bootstrap=self.bootstrap, oob_score=True, n_estimators=self.n_estimators,
+                                              max_features=self.max_features, n_jobs=self.n_jobs,
                                               random_state=self.random_seed)
         else:
-            rf_global = RandomForestRegressor(bootstrap=self.bootstrap, n_estimators=self.ntree,
-                                              max_features=self.mtry, n_jobs=self.n_jobs,
+            rf_global = RandomForestRegressor(bootstrap=self.bootstrap, n_estimators=self.n_estimators,
+                                              max_features=self.max_features, n_jobs=self.n_jobs,
                                               random_state=self.random_seed)
         rf_global.fit(X_train, y_train)
         self.global_model = rf_global
@@ -144,17 +144,17 @@ class PyGRFBuilder:
 
             # build a local model
             if self.bootstrap:
-                rf_local = RandomForestRegressor(bootstrap=self.bootstrap, oob_score=True, n_estimators=self.ntree,
-                                                 max_features=self.mtry, n_jobs=self.n_jobs, random_state=self.random_seed)
+                rf_local = RandomForestRegressor(bootstrap=self.bootstrap, oob_score=True, n_estimators=self.n_estimators,
+                                                 max_features=self.max_features, n_jobs=self.n_jobs, random_state=self.random_seed)
             else:
                 rf_local = RandomForestRegressor(bootstrap=self.bootstrap,
-                                                 n_estimators=self.ntree,
-                                                 max_features=self.mtry, n_jobs=self.n_jobs, random_state=self.random_seed)
+                                                 n_estimators=self.n_estimators,
+                                                 max_features=self.max_features, n_jobs=self.n_jobs, random_state=self.random_seed)
 
             # fit a local model using local trianing data, which may be expanded with replacement
             if self.train_weighted:
-                if self.resampled and len(local_X_train) < 2 * self.ntree:
-                    resampled_length = min(2 * self.ntree, 2*len(local_X_train)) - len(local_X_train)
+                if self.resampled and len(local_X_train) < 2 * self.n_estimators:
+                    resampled_length = min(2 * self.n_estimators, 2*len(local_X_train)) - len(local_X_train)
                     more_X_train_resampled, more_y_train_resampled, more_sample_weights_resampled = resample(
                         local_X_train,
                         local_y_train,
@@ -169,8 +169,8 @@ class PyGRFBuilder:
                 else:
                     rf_local.fit(local_X_train, local_y_train, sample_weights)
             else:
-                if self.resampled and len(local_X_train) < 2 * self.ntree:
-                    resampled_length = min(2 * self.ntree, 2*len(local_X_train)) - len(local_X_train)
+                if self.resampled and len(local_X_train) < 2 * self.n_estimators:
+                    resampled_length = min(2 * self.n_estimators, 2*len(local_X_train)) - len(local_X_train)
                     more_X_train_resampled, more_y_train_resampled = resample(local_X_train,
                                                                               local_y_train,
                                                                               replace=True,
@@ -201,7 +201,7 @@ class PyGRFBuilder:
         X_test: data frame
             A data frame of the independent variables of test samples.
         coords_test: data frame
-            A data frame of the two-dimensional coordinates of test samples.
+            A data frame of the two-dimensional coordinates of test samples. It is recommended to use projected coordinates.
         local_weight: float
             A number for combining global and local predictions
 
@@ -315,7 +315,7 @@ def search_bw_lw_ISA(y, coords, bw_min=None, bw_max=None, step=1):
     y: data series
         A data series of dependent variable of samples.
     coords: data frame
-        A data frame of two-dimentional coordinates of samples.
+        A data frame of two-dimentional coordinates of samples. It is recommended to use projected coordinates.
     bw_min: int, default = None
         The minimum band_width for searching.
     bw_max: int, default = None
@@ -340,8 +340,8 @@ def search_bw_lw_ISA(y, coords, bw_min=None, bw_max=None, step=1):
         bw_max = len(y)
 
     # build the k-d tree using spatial coordinates of data records
-    coords['coordinate'] = coords.apply(lambda row: tuple(row), axis=1)
-    kd = libpysal.cg.KDTree(np.array(coords['coordinate'].tolist()))
+    coords_list = [tuple(row) for row in coords.to_numpy()]
+    kd = libpysal.cg.KDTree(np.array(coords_list))
 
     # create lists for saving the ISA result
     bandwidth_list, moran_I_list, z_score_list, p_value_list = [], [], [], []
@@ -369,7 +369,7 @@ def search_bw_lw_ISA(y, coords, bw_min=None, bw_max=None, step=1):
     return found_bandwidth, found_moran_I, found_p_value
 
 
-def search_bandwidth(X, y, coords, ntree, mtry, bw_min=None, bw_max=None, step=1, train_weighted=True, resampled=True, n_jobs=None,
+def search_bandwidth(X, y, coords, n_estimators, max_features, bw_min=None, bw_max=None, step=1, train_weighted=True, resampled=True, n_jobs=None,
                      random_seed=None):
     """
     Optimize the bandwidth using OOB score
@@ -381,10 +381,10 @@ def search_bandwidth(X, y, coords, ntree, mtry, bw_min=None, bw_max=None, step=1
     y: data series
         A data series of dependent variable of samples.
     coords: data frame
-        A data frame of two-dimentional coordinates of samples.
-    ntree: int
+        A data frame of two-dimentional coordinates of samples. It is recommended to use projected coordinates.
+    n_estimators: int
         The number of trees for the PyGRF model.
-    mtry: {“sqrt”, “log2”, None}, int or float
+    max_features: {“sqrt”, “log2”, None}, int or float
         The number of input variables to consider at each split.
     bw_min: int, default = None
         The minimum band_width for searching.
@@ -427,7 +427,7 @@ def search_bandwidth(X, y, coords, ntree, mtry, bw_min=None, bw_max=None, step=1
         band_width_list.append(current_bw)
 
         # fit PyGRF model using the test bandwidth and get the OOB predictions
-        grf = PyGRFBuilder(ntree=ntree, mtry=mtry, band_width=current_bw, random_seed=random_seed,
+        grf = PyGRFBuilder(n_estimators=n_estimators, max_features=max_features, band_width=current_bw, random_seed=random_seed,
                     train_weighted=train_weighted)
         y_oob_local, y_oob_global = grf.fit(X, y, coords)
 

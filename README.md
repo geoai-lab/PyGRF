@@ -36,20 +36,26 @@ Figure 3. Map visualizations for the case study of help request prediction in Bu
 
 ### Repository organization
 
-* The file "PyGRF.py" is source code of this Python-based GRF model.
+* The file "PyGRF.py" is the source code of this Python-based GRF model.
+* The file "Description_Parameters.pdf" explains the details of parameters in this model.
 * The folder "Notebooks" contains two Jupyter Notebooks used for implementing the two case studies in public health and natural disasters.
 * The folder "Data" contains the experimental data for the two case studies including obesity rate data and 311 help request data.
 <br />
 
 
 
-
 ### Installation
 
-We have published the code for PyGRF as a Python package in PyPI (https://pypi.org/project/PyGRF/). You can directly install it with the command "pip install PyGRF". 
+We have published the code for PyGRF as a Python package in [PyPI](https://pypi.org/project/PyGRF/). You can directly install it with the command "pip install PyGRF". 
 <br />
 <br />
 
+
+
+
+## Authors
+* **Kai Sun** - *GeoAI Lab* - Email: ksun4@buffalo.edu
+* **Yingjie Hu** - *GeoAI Lab* - Email: yhu42@buffalo.edu
 
 
 ### Reference
