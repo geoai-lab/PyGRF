@@ -73,6 +73,8 @@ pygrf_example.fit(X_train, y_train, xy_coord)
 #Make predictions for testing data using the fitted PyGRF model and you specified local model weight 
 predict_combined, predict_global, predict_local = pygrf_example.predict(X_test, coords_test, local_weight=0.46)
 ```
+<br />
+<br />
 
 
 ### Parameters:
