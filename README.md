@@ -3,7 +3,7 @@
 ### Overall description
 Geographical random forest (GRF) is a recently developed and spatially explicit machine learning model. With the ability to provide more accurate predictions and local interpretations, GRF has already been used in many studies. Implemented as an R package, GRF currently does not have a Python version which limits its adoption among machine learning practitioners. The current GRF model also has limitations in the determination of the local model weight and bandwidth parameters, potential insufficient numbers of local training samples, and sometimes high local prediction errors. In this work, we develop a Python-based GRF model, PyGRF, and conduct assessment to ensure its consistency with the original R-based model. We further address the three limitations by introducing theory-informed local model weight and bandwidth determination, local training sample expansion, and spatially-weighted local predictions. We demonstrate the performance of PyGRF and use it in two case studies in public health and natural disasters.
 
-This repository contains two Jupyter Notebooks and related datasets for the two case studies.
+This repository contains the source code and parameter descriptions of the PyGRF model, and two Jupyter Notebooks and related datasets for the two case studies.
 
 
 <br />
