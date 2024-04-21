@@ -46,13 +46,13 @@ Figure 3. Map visualizations for the case study of help request prediction in Bu
 
 ### Installation
 
-We have published the code for PyGRF as a Python package in [PyPI](https://pypi.org/project/PyGRF/). You can directly install it with the command "pip install PyGRF". 
+We have published PyGRF as a Python package in [PyPI](https://pypi.org/project/PyGRF/). You can directly install it with the command "pip install PyGRF". 
 <br />
 <br />
 
 
 
-### Example:
+### Example
 
 Below shows an example on how to fit a PyGRF model and use it to make predictions.
 
@@ -76,7 +76,7 @@ predict_combined, predict_global, predict_local = pygrf_example.predict(X_test, 
 <br />
 
 
-### Parameters:
+### Parameters
 If you want to learn more about the major parameters in this package, please refer to the [Description of Parameters](https://github.com/geoai-lab/PyGRF/blob/master/Description_Parameters.pdf).
 <br />
 <br />
