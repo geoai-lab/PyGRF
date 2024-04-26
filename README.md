@@ -1,9 +1,9 @@
 # PyGRF: An improved Python Geographical Random Forest model and case studies in public health and natural disasters
 
 ### Overall description
-Geographical random forest (GRF) is a recently developed and spatially explicit machine learning model. With the ability to provide more accurate predictions and local interpretations, GRF has already been used in many studies. Implemented as an R package, GRF currently does not have a Python version which limits its adoption among machine learning practitioners. The current GRF model also has limitations in the determination of the local model weight and bandwidth parameters, potential insufficient numbers of local training samples, and sometimes high local prediction errors. In this work, we develop a Python-based GRF model, PyGRF, and conduct assessment to ensure its consistency with the original R-based model. We further address the three limitations by introducing theory-informed local model weight and bandwidth determination, local training sample expansion, and spatially-weighted local predictions. We demonstrate the performance of PyGRF and use it in two case studies in public health and natural disasters.
+Geographical random forest (GRF) is a recently developed and spatially explicit machine learning model. With the ability to provide more accurate predictions and local interpretations, GRF has already been used in many studies. Implemented as an R package, GRF currently does not have a Python version which limits its adoption among machine learning practitioners. The current GRF model also has limitations in its determination of the local model weight and bandwidth hyperparameters, potentially insufficient numbers of local training samples, and sometimes high local prediction errors. In this work, we develop a Python-based GRF model, PyGRF, and conduct assessment to ensure its consistency with the original R-based model. We further address the identified limitations by introducing theory-informed hyperparameter determination, local training sample expansion, and spatially-weighted local prediction. We demonstrate the performance of PyGRF on an example dataset and further use it in two case studies in public health and natural disasters.
 
-This repository contains the source code and parameter descriptions of the PyGRF model, and two Jupyter Notebooks and related datasets for the two case studies.
+This repository contains the source code and parameter descriptions of the PyGRF model, and three Jupyter Notebooks and related datasets for income prediction and two case studies.
 
 
 <br />
@@ -18,17 +18,17 @@ Figure 1. Scatter plots for predictions of PyGRF and GRF in three different sett
 <br />
 <br />
 <p align="center">
-<img align="center" src="Figs/Obesity.jpg" width="600" />
+<img align="center" src="Figs/Obesity_ISA.jpg" width="600" />
 <br />
-Figure 2. Map visualizations for the case study of obesity prevalence estimation in NYC: (a) city boundary of NYC and its census tracts; (b) obesity prevalence in NYC in 2018.
+Figure 2. Neighborhood-level obesity prevalence in NYC and incremental spatial autocorrelation of the data: (a) a map visualization of obesity prevalence; (b) incremental spatial autocorrelation test result.
 </p>
 <br />
 
 <br />
 <p align="center">
-<img align="center" src="Figs/311.jpg" width="600" />
+<img align="center" src="Figs/Local_feature_importance.jpg" width="600" />
 <br />
-Figure 3. Map visualizations for the case study of help request prediction in Buffalo: (a) city boundary of Buffalo and its census block groups; (b) help requests in Buffalo during the period from 12/19/2022 to 1/1/2023.
+Figure 3. Map visualizations for the local feature importance of two variables: (a) % Black; (b) median household income.
 </p>
 <br />
 
@@ -38,8 +38,8 @@ Figure 3. Map visualizations for the case study of help request prediction in Bu
 
 * The file "PyGRF.py" is the source code of this Python-based GRF model.
 * The file "Description_Parameters.pdf" explains the details of parameters in this model.
-* The folder "Notebooks" contains two Jupyter Notebooks used for implementing the two case studies in public health and natural disasters.
-* The folder "Data" contains the experimental data for the two case studies including obesity rate data and 311 help request data.
+* The folder "Notebooks" contains three Jupyter Notebooks used for implementing income prediction and two case studies in public health and natural disasters.
+* The folder "Data" contains the income dataset and experimental data for two case studies including obesity rate data and 311 help request data.
 <br />
 
 
@@ -65,7 +65,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
 
 #Create a PyGRF model by specifying hyperparameters
 pygrf_example = PyGRF.PyGRFBuilder(n_estimators=60, max_features=1, band_width=39, train_weighted=True, predict_weighted=True, bootstrap=False,
-                          resampled=True, random_seed=42)
+                          resampled=True, random_state=42)
 
 #Fit the created PyGRF model based on training data and their spatial coordinates						  
 pygrf_example.fit(X_train, y_train, xy_coord)

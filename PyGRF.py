@@ -39,13 +39,13 @@ class PyGRFBuilder:
         Whether each tree is built using bootstrap sampling (with replacement) from the original dataset. If False, each tree is built using the entire dataset.
         Note that this parameter should be true if out of bag (OOB) predictions are needed.
         More details please refer to the documentation of scikit-learn at the link: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html.
-    random_seed: int, instance of Numpy RandomState or None, default=None
+    random_state: int, instance of Numpy RandomState or None, default=None
         Determine the randomness within the model fitting. This parameter has to be fixed in order to achieve reproducibility in the model fitting process.
         More details please refer to the documentation of scikit-learn at the link: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html.
     """
 
     def __init__(self, band_width, n_estimators=100, max_features=1.0, kernel="adaptive", train_weighted=True, predict_weighted=True,
-                 resampled=True, n_jobs=None, bootstrap=True, random_seed=None):
+                 resampled=True, n_jobs=None, bootstrap=True, random_state=None):
         self.n_estimators = n_estimators
         self.max_features = max_features
         self.band_width = band_width
@@ -55,7 +55,7 @@ class PyGRFBuilder:
         self.n_jobs = n_jobs
         self.bootstrap = bootstrap
         self.resampled = resampled
-        self.random_seed = random_seed
+        self.random_state = random_state
         self.global_model = None
         self.local_models = None
         self.train_data_coords = None
@@ -90,11 +90,11 @@ class PyGRFBuilder:
         if self.bootstrap:
             rf_global = RandomForestRegressor(bootstrap=self.bootstrap, oob_score=True, n_estimators=self.n_estimators,
                                               max_features=self.max_features, n_jobs=self.n_jobs,
-                                              random_state=self.random_seed)
+                                              random_state=self.random_state)
         else:
             rf_global = RandomForestRegressor(bootstrap=self.bootstrap, n_estimators=self.n_estimators,
                                               max_features=self.max_features, n_jobs=self.n_jobs,
-                                              random_state=self.random_seed)
+                                              random_state=self.random_state)
         rf_global.fit(X_train, y_train)
         self.global_model = rf_global
         if self.bootstrap:
@@ -145,11 +145,11 @@ class PyGRFBuilder:
             # build a local model
             if self.bootstrap:
                 rf_local = RandomForestRegressor(bootstrap=self.bootstrap, oob_score=True, n_estimators=self.n_estimators,
-                                                 max_features=self.max_features, n_jobs=self.n_jobs, random_state=self.random_seed)
+                                                 max_features=self.max_features, n_jobs=self.n_jobs, random_state=self.random_state)
             else:
                 rf_local = RandomForestRegressor(bootstrap=self.bootstrap,
                                                  n_estimators=self.n_estimators,
-                                                 max_features=self.max_features, n_jobs=self.n_jobs, random_state=self.random_seed)
+                                                 max_features=self.max_features, n_jobs=self.n_jobs, random_state=self.random_state)
 
             # fit a local model using local trianing data, which may be expanded with replacement
             if self.train_weighted:
@@ -161,7 +161,7 @@ class PyGRFBuilder:
                         sample_weights,
                         replace=True,
                         n_samples=resampled_length,
-                        random_state=self.random_seed)
+                        random_state=self.random_state)
                     local_X_train_resampled = pd.concat([local_X_train, more_X_train_resampled], ignore_index=True)
                     local_y_train_resampled = pd.concat([local_y_train, more_y_train_resampled], ignore_index=True)
                     sample_weights_resampled = np.concatenate((sample_weights, more_sample_weights_resampled))
@@ -175,7 +175,7 @@ class PyGRFBuilder:
                                                                               local_y_train,
                                                                               replace=True,
                                                                               n_samples=resampled_length,
-                                                                              random_state=self.random_seed)
+                                                                              random_state=self.random_state)
                     local_X_train_resampled = pd.concat([local_X_train, more_X_train_resampled], ignore_index=True)
                     local_y_train_resampled = pd.concat([local_y_train, more_y_train_resampled], ignore_index=True)
                     rf_local.fit(local_X_train_resampled, local_y_train_resampled)
@@ -370,7 +370,7 @@ def search_bw_lw_ISA(y, coords, bw_min=None, bw_max=None, step=1):
 
 
 def search_bandwidth(X, y, coords, n_estimators, max_features, bw_min=None, bw_max=None, step=1, train_weighted=True, resampled=True, n_jobs=None,
-                     random_seed=None):
+                     random_state=None):
     """
     Optimize the bandwidth using OOB score
 
@@ -398,7 +398,7 @@ def search_bandwidth(X, y, coords, n_estimators, max_features, bw_min=None, bw_m
         Whether local samples are expanded in the PyGRF model.
     n_jobs: int, default=None
         The number of jobs to execute in parallel.
-    random_seed: int, instance of Numpy RandomState or None, default=None
+    random_state: int, instance of Numpy RandomState or None, default=None
         Determine the randomness within the PyGRF model fitting.
 
     Returns
@@ -427,7 +427,7 @@ def search_bandwidth(X, y, coords, n_estimators, max_features, bw_min=None, bw_m
         band_width_list.append(current_bw)
 
         # fit PyGRF model using the test bandwidth and get the OOB predictions
-        grf = PyGRFBuilder(n_estimators=n_estimators, max_features=max_features, band_width=current_bw, random_seed=random_seed,
+        grf = PyGRFBuilder(n_estimators=n_estimators, max_features=max_features, band_width=current_bw, random_state=random_state,
                     train_weighted=train_weighted)
         y_oob_local, y_oob_global = grf.fit(X, y, coords)
 
