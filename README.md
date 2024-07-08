@@ -40,6 +40,7 @@ Figure 3. Map visualizations for the local feature importance of two variables: 
 * The file "Description_Parameters.pdf" explains the details of parameters in this model.
 * The folder "Notebooks" contains three Jupyter Notebooks used for implementing income prediction and two case studies in public health and natural disasters.
 * The folder "Data" contains the income dataset and experimental data for two case studies including obesity rate data and 311 help request data.
+* The folder "Test" contains the Python file for the unit test for the PyGRF package. The Pytest package is needed to run this file.
 <br />
 
 
