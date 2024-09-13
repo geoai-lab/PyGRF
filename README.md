@@ -1,7 +1,7 @@
 # PyGRF: An improved Python Geographical Random Forest model and case studies in public health and natural disasters
 
 ### Overall description
-Geographical random forest (GRF) is a recently developed and spatially explicit machine learning model. With the ability to provide more accurate predictions and local interpretations, GRF has already been used in many studies. Implemented as an R package, GRF currently does not have a Python version which limits its adoption among machine learning practitioners. The current GRF model also has limitations in its determination of the local model weight and bandwidth hyperparameters, potentially insufficient numbers of local training samples, and sometimes high local prediction errors. In this work, we develop a Python-based GRF model, PyGRF, and conduct assessment to ensure its consistency with the original R-based model. We further address the identified limitations by introducing theory-informed hyperparameter determination, local training sample expansion, and spatially-weighted local prediction. We demonstrate the performance of PyGRF on an example dataset and further use it in two case studies in public health and natural disasters.
+Geographical random forest (GRF) is a recently developed and spatially explicit machine learning model. With the ability to provide more accurate predictions and local interpretations, GRF has already been used in many studies. The current GRF model, however, has limitations in its determination of the local model weight and bandwidth hyperparameters, potentially insufficient numbers of local training samples, and sometimes high local prediction errors. Also, implemented as an R package, GRF currently does not have a Python version which limits its adoption among machine learning practitioners who prefer Python. This work addresses these limitations by introducing theory-informed hyperparameter determination, local training sample expansion, and spatially-weighted local prediction. We also develop a Python-based GRF model and package, PyGRF, to facilitate the use of the model. We evaluate the performance of PyGRF on an example dataset and further demonstrate its use in two case studies in public health and natural disasters.
 
 This repository contains the source code and parameter descriptions of the PyGRF model, and three Jupyter Notebooks and related datasets for income prediction and two case studies.
 
@@ -91,6 +91,6 @@ If you want to learn more about the major parameters in this package, please ref
 ### Reference
 If you use the data or code from this repository, or the PyGRF package, we will really appreciate if you can cite our paper:
 
-Kai Sun, Ryan Zhenqi Zhou, Jiyeon Kim, and Yingjie Hu. 2024. PyGRF: An improved Python Geographical Random Forest model and case studies in public health and natural disasters.
+Kai Sun, Ryan Zhenqi Zhou, Jiyeon Kim, and Yingjie Hu. 2024. PyGRF: An improved Python Geographical Random Forest model and case studies in public health and natural disasters. Transactions in GIS.
 
 
