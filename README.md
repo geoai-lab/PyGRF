@@ -52,6 +52,10 @@ We have published PyGRF as a Python package in [PyPI](https://pypi.org/project/P
 <br />
 
 
+### Potential issues and solutions
+
+* PyGRF requires the pacakge esda as a dependency for computing Moran's Index. We recommend users to install esda 2.5, and then PyGRF can be used smoothly with any additional action. If the version of your installed esda is 2.6, you will need to install matplotlib manually in order to import PyGRF successfully.   
+
 
 ### Example
 
