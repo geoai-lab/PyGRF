@@ -42,10 +42,24 @@ class PyGRFBuilder:
     random_state: int, instance of Numpy RandomState or None, default=None
         Determine the randomness within the model fitting. This parameter has to be fixed in order to achieve reproducibility in the model fitting process.
         More details please refer to the documentation of scikit-learn at the link: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html.
+    **kwargs : dict, optional
+        Additional parameters for fitting the random forest model. Some common parameters include:        
+        - max_depth : int, default=None
+            The maximum depth of the tree.
+
+        - min_samples_split : int or float, default=2
+            The minimum number of samples required to split an internal node.
+            
+        - min_samples_leaf : int or float, default=1
+            The minimum number of samples required to be at a leaf node.
+        
+        Additional parameters can be found in the scikit-learn RandomForestRegressor documentation at the link: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html.
+    
+    
     """
 
     def __init__(self, band_width, n_estimators=100, max_features=1.0, kernel="adaptive", train_weighted=True, predict_weighted=True,
-                 resampled=True, n_jobs=None, bootstrap=True, random_state=None):
+                 resampled=True, n_jobs=None, bootstrap=True, random_state=None, **kwargs):
         self.n_estimators = n_estimators
         self.max_features = max_features
         self.band_width = band_width
@@ -61,6 +75,7 @@ class PyGRFBuilder:
         self.train_data_coords = None
         self.distance_matrix = None
         self.train_data_columns = None
+        self.rf_add_params = kwargs
 
     def fit(self, X_train, y_train, coords):
         """
@@ -90,11 +105,11 @@ class PyGRFBuilder:
         if self.bootstrap:
             rf_global = RandomForestRegressor(bootstrap=self.bootstrap, oob_score=True, n_estimators=self.n_estimators,
                                               max_features=self.max_features, n_jobs=self.n_jobs,
-                                              random_state=self.random_state)
+                                              random_state=self.random_state, **self.rf_add_params)
         else:
             rf_global = RandomForestRegressor(bootstrap=self.bootstrap, n_estimators=self.n_estimators,
                                               max_features=self.max_features, n_jobs=self.n_jobs,
-                                              random_state=self.random_state)
+                                              random_state=self.random_state, **self.rf_add_params)
         rf_global.fit(X_train, y_train)
         self.global_model = rf_global
         if self.bootstrap:
@@ -145,11 +160,11 @@ class PyGRFBuilder:
             # build a local model
             if self.bootstrap:
                 rf_local = RandomForestRegressor(bootstrap=self.bootstrap, oob_score=True, n_estimators=self.n_estimators,
-                                                 max_features=self.max_features, n_jobs=self.n_jobs, random_state=self.random_state)
+                                                 max_features=self.max_features, n_jobs=self.n_jobs, random_state=self.random_state, **self.rf_add_params)
             else:
                 rf_local = RandomForestRegressor(bootstrap=self.bootstrap,
                                                  n_estimators=self.n_estimators,
-                                                 max_features=self.max_features, n_jobs=self.n_jobs, random_state=self.random_state)
+                                                 max_features=self.max_features, n_jobs=self.n_jobs, random_state=self.random_state, **self.rf_add_params)
 
             # fit a local model using local trianing data, which may be expanded with replacement
             if self.train_weighted:
