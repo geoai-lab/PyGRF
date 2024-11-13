@@ -73,7 +73,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
 pygrf_example = PyGRF.PyGRFBuilder(n_estimators=60, max_features=1, band_width=39, train_weighted=True, predict_weighted=True, bootstrap=False,
                           resampled=True, random_state=42)
 
-#Fit the created PyGRF model based on training data and their spatial coordinates						  
+#Fit the created PyGRF model based on training data and their spatial coordinates
+# xy_coord is the two-dimensional coordinates of training samples						  
 pygrf_example.fit(X_train, y_train, xy_coord)
 
 #Make predictions for testing data using the fitted PyGRF model and you specified local model weight 
