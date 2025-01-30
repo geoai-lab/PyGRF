@@ -37,7 +37,7 @@ class PyGRFBuilder:
         More details please refer to the documentation of scikit-learn at the link: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html
     bootstrap: bool, default = True
         Whether each tree is built using bootstrap sampling (with replacement) from the original dataset. If False, each tree is built using the entire dataset.
-        Note that this parameter should be true if out of bag (OOB) predictions are needed.
+        Note that this parameter should be true if out of bag (OOB) predictions and local R-squared scores are needed.
         More details please refer to the documentation of scikit-learn at the link: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html.
     random_state: int, instance of Numpy RandomState or None, default=None
         Determine the randomness within the model fitting. This parameter has to be fixed in order to achieve reproducibility in the model fitting process.
@@ -319,6 +319,31 @@ class PyGRFBuilder:
             feature_importance_df = pd.concat([feature_importance_df, pd.DataFrame([this_row], columns=column_list)], ignore_index=True)
 
         return feature_importance_df
+
+    def get_local_R2(self):
+        """
+        Retrieve the local R-squared scores of the local models. This function is applicable only if the model is trained with the "Bootstrap" parameter set to True.
+
+        Returns:
+        -------
+        R2_df: data frame
+            A data frame containing the R-squared scores of local models.
+        """
+
+        if self.local_models == None:
+            print("The model has not been trained yet...")
+            return None
+
+        # create an empty data frame for saving the R-squared scores
+        column_list = ["model_index", "local R2"]
+        R2_df = pd.DataFrame(columns=column_list)
+
+        # Extract the feature importances from local models
+        for i in range(len(self.local_models)):
+            this_row = [i] + [self.local_models[i].oob_score_]
+            R2_df = pd.concat([R2_df, pd.DataFrame([this_row], columns=column_list)], ignore_index=True)
+
+        return R2_df
 
 
 def search_bw_lw_ISA(y, coords, bw_min=None, bw_max=None, step=1):
