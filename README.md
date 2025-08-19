@@ -94,9 +94,13 @@ If you want to learn more about the major parameters in this package, please ref
 * **Yingjie Hu** - *GeoAI Lab* - Email: yhu42@buffalo.edu
 
 
-### Reference
+## Reference
 If you use the data or code from this repository, or the PyGRF package, we will really appreciate if you can cite our paper:
 
-Kai Sun, Ryan Zhenqi Zhou, Jiyeon Kim, and Yingjie Hu. 2024. PyGRF: An improved Python Geographical Random Forest model and case studies in public health and natural disasters. Transactions in GIS.
+Kai Sun, Ryan Zhenqi Zhou, Jiyeon Kim, and Yingjie Hu (2024): PyGRF: An improved Python Geographical Random Forest model and case studies in public health and natural disasters. Transactions in GIS, 28(7), 2476-2491.
+
+## Acknowledgement
+
+This work is supported by the U.S. National Science Foundation under Grant Nos. BCS-2117771 and BCS-2416886. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation.
 
 
